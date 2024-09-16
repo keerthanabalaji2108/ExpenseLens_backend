@@ -22,7 +22,7 @@ import com.elens.demo.entity.*;
 import com.elens.demo.service.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3003")
+@CrossOrigin(origins = "http://54.90.184.214:3003")
 @RequestMapping("/expenses")
 public class ExpenseController {
 
