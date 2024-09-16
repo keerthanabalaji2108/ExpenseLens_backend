@@ -5,6 +5,6 @@ WORKDIR /app1
 # Copy the compiled Java application JAR file into the container
 COPY ./target/ExpenseLens-0.0.1-SNAPSHOT.jar /app1
 # Expose the port the Spring Boot application will run on
-EXPOSE 8001
+EXPOSE 9090
 # Command to run the application
 CMD ["java", "-jar", "ExpenseLens-0.0.1-SNAPSHOT.jar"]
