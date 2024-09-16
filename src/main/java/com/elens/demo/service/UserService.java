@@ -10,6 +10,7 @@ import com.elens.demo.entity.User;
 import com.elens.demo.entity.Utility;
 import com.elens.demo.repository.UserDAO;
 import java.util.*;
+
 @Service("UserService")
 public class UserService {
 
@@ -26,7 +27,9 @@ public class UserService {
 	}
 
 	public User addNewUser(User user) {
-		User userSaved = userDAO.save(user);
+		User userSaved = userDAO.saveNew(user);
+		userSaved.setTotalSaving(user.getSalary());
+		userDAO.save(userSaved);
 		return userSaved;
 	}
 
@@ -34,22 +37,26 @@ public class UserService {
 		return userDAO.findByusernameAndPassword(username, pwd);
 	}
 
-	public boolean removeUserById(long id) {
-		if (userDAO.findById(id) != null) {
-			userDAO.deleteById(id);
-			return true;
-		} else {
-			throw new RuntimeException("id not found");
-		}
-
-	}
-
-	public void removeAllUsers() {
-		userDAO.deleteAll();
-	}
+//	public boolean removeUserById(long id) {
+//		if (userDAO.findById(id) != null) {
+//			userDAO.deleteById(id);
+//			return true;
+//		} else {
+//			throw new RuntimeException("id not found");
+//		}
+//
+//	}
+//
+//	public void removeAllUsers() {
+//		userDAO.deleteAll();
+//	}
 
 	public void updateEntertainment(long id, Entertainment entertainment) {
-		User userSaved = userDAO.findById(id).orElseThrow(() -> new RuntimeException("id not found"));
+		User userSaved = userDAO.findById(id);
+		if(userSaved == null)
+		{
+			throw new RuntimeException("id not found");
+		}
 		userSaved.setEntertainment(userSaved.getEntertainment() + entertainment.getCinemaAndEvents()
 				+ entertainment.getMusicSubscriptions() + entertainment.getShoppingBills()
 				+ entertainment.getStreamingSubscriptions());
@@ -62,50 +69,72 @@ public class UserService {
 		userDAO.save(userSaved);
 
 	}
-	
+
 	public void updateFood(long id, Food food) {
-		User userSaved = userDAO.findById(id).orElseThrow(() -> new RuntimeException("id not found"));
-		userSaved.setFood(userSaved.getFood() + food.getBeverage() + food.getDiningOut() + food.getGroceries() + food.getTakeOut());
-		
-		userSaved.setTotalSpending(userSaved.getTotalSpending() + food.getBeverage() + food.getDiningOut() + food.getGroceries() + food.getTakeOut());
-		
-		userSaved.setTotalSaving(userSaved.getSalary()-userSaved.getTotalSpending());
+		User userSaved = userDAO.findById(id);
+		if(userSaved == null)
+		{
+			throw new RuntimeException("id not found");
+		}
+		userSaved.setFood(userSaved.getFood() + food.getBeverage() + food.getDiningOut() + food.getGroceries()
+				+ food.getTakeOut());
+
+		userSaved.setTotalSpending(userSaved.getTotalSpending() + food.getBeverage() + food.getDiningOut()
+				+ food.getGroceries() + food.getTakeOut());
+
+		userSaved.setTotalSaving(userSaved.getSalary() - userSaved.getTotalSpending());
 		userDAO.save(userSaved);
 	}
-	
+
 	public void updateUtility(long id, Utility utility) {
-		User userSaved = userDAO.findById(id).orElseThrow(() -> new RuntimeException("id not found"));
-		userSaved.setUtility(userSaved.getUtility() + utility.getElectricity() + utility.getGas() + utility.getMaintenance()
-		+ utility.getMobile() + utility.getRent() + utility.getWater());
-		
-		userSaved.setTotalSpending(userSaved.getTotalSpending() + utility.getElectricity() + utility.getGas() + utility.getMaintenance()
-		+ utility.getMobile() + utility.getRent() + utility.getWater());
-		
-		userSaved.setTotalSaving(userSaved.getSalary()-userSaved.getTotalSpending());
+		User userSaved = userDAO.findById(id);
+		if(userSaved == null)
+		{
+			throw new RuntimeException("id not found");
+		}
+		userSaved.setUtility(userSaved.getUtility() + utility.getElectricity() + utility.getGas()
+				+ utility.getMaintenance() + utility.getMobile() + utility.getRent() + utility.getWater());
+
+		userSaved.setTotalSpending(userSaved.getTotalSpending() + utility.getElectricity() + utility.getGas()
+				+ utility.getMaintenance() + utility.getMobile() + utility.getRent() + utility.getWater());
+
+		userSaved.setTotalSaving(userSaved.getSalary() - userSaved.getTotalSpending());
 		userDAO.save(userSaved);
 	}
-	
+
 	public List<User> getAllUsers() {
 		return userDAO.findAll();
 	}
-	
+
 	public List<Double> getAsPercentage(long id) {
-		User userSaved = userDAO.findById(id).orElseThrow(() -> new RuntimeException("id not found"));
+		User userSaved = userDAO.findById(id);
+		if(userSaved == null)
+		{
+			throw new RuntimeException("id not found");
+		}
 		List<Double> percentage = new ArrayList<>();
-		percentage.add(Double.parseDouble(String.format("%.2f", (100*(userSaved.getEntertainment()/userSaved.getTotalSpending())))));
-		percentage.add(Double.parseDouble(String.format("%.2f", (100*(userSaved.getFood()/userSaved.getTotalSpending())))));
-		percentage.add(Double.parseDouble(String.format("%.2f", (100*(userSaved.getUtility()/userSaved.getTotalSpending())))));
+		percentage.add(Double.parseDouble(
+				String.format("%.2f", (100 * (userSaved.getEntertainment() / userSaved.getTotalSpending())))));
+		percentage.add(Double
+				.parseDouble(String.format("%.2f", (100 * (userSaved.getFood() / userSaved.getTotalSpending())))));
+		percentage.add(Double
+				.parseDouble(String.format("%.2f", (100 * (userSaved.getUtility() / userSaved.getTotalSpending())))));
 		return percentage;
 
 	}
-	
+
 	public List<Double> getSpendingVsSaving(@PathVariable long id) {
-		User userSaved = userDAO.findById(id).orElseThrow(() -> new RuntimeException("id not found"));
+		User userSaved = userDAO.findById(id);
+		if(userSaved == null)
+		{
+			throw new RuntimeException("id not found");
+		}
 		List<Double> percentage = new ArrayList<>();
-		percentage.add(Double.parseDouble(String.format("%.2f", (100*(userSaved.getTotalSpending()/userSaved.getSalary())))));
-		percentage.add(Double.parseDouble(String.format("%.2f", (100*(userSaved.getTotalSaving()/userSaved.getSalary())))));
+		percentage.add(Double
+				.parseDouble(String.format("%.2f", (100 * (userSaved.getTotalSpending() / userSaved.getSalary())))));
+		percentage.add(Double
+				.parseDouble(String.format("%.2f", (100 * (userSaved.getTotalSaving() / userSaved.getSalary())))));
 		return percentage;
 	}
-	
 
 }

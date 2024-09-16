@@ -22,8 +22,11 @@ public class EntertainmentService {
 	}
 
 	public Entertainment updateEntertainment(long id, Entertainment entertainment) {
-		Entertainment existingEntertainment = entertainmentDAO.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Entertainment record not found for id: " + id));
+		Entertainment existingEntertainment = entertainmentDAO.findById(id);
+		if(existingEntertainment == null)
+		{
+			throw new RuntimeException("id not found");
+		}
 
 		existingEntertainment.setStreamingSubscriptions(
 				existingEntertainment.getStreamingSubscriptions() + entertainment.getStreamingSubscriptions());
@@ -40,22 +43,30 @@ public class EntertainmentService {
 	
 	public void save(Entertainment entertainment)
 	{
-		entertainmentDAO.save(entertainment);
+		entertainmentDAO.saveNew(entertainment);
 	}
 	
 	public Entertainment getEntertainmentById(long id) {
-		return entertainmentDAO.findById(id).orElseThrow(() -> new RuntimeException("id not found"));
+		Entertainment existingEntertainment =  entertainmentDAO.findById(id);
+		if(existingEntertainment == null)
+		{
+			throw new RuntimeException("id not found");
+		}
+		else
+		{
+			return existingEntertainment;
+		}
 	}
 	
-	public void deleteById(long id)
-	{
-		entertainmentDAO.deleteById(id);
-	}
-	
-	public void deleteAll()
-	{
-		entertainmentDAO.deleteAll();
-	}
+//	public void deleteById(long id)
+//	{
+//		entertainmentDAO.deleteById(id);
+//	}
+//	
+//	public void deleteAll()
+//	{
+//		entertainmentDAO.deleteAll();
+//	}
 
 
 }

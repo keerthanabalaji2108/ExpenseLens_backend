@@ -22,8 +22,11 @@ public class UtilityService {
 	}
 
 	public Utility updateUtility(long id, Utility utility) {
-		Utility existingUtility = utilityDAO.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Utility record not found for id: " + id));
+		Utility existingUtility = utilityDAO.findById(id);
+		if(existingUtility == null)
+		{
+			throw new RuntimeException("id not found");
+		}
 
 		existingUtility.setElectricity(existingUtility.getElectricity() + utility.getElectricity());
 		existingUtility.setWater(existingUtility.getWater() + utility.getWater());
@@ -37,22 +40,30 @@ public class UtilityService {
 	}
 
 	public void save(Utility utility) {
-		utilityDAO.save(utility);
+		utilityDAO.saveNew(utility);
 	}
 	
 	public Utility getUtilityById(long id) {
-		return utilityDAO.findById(id).orElseThrow(() -> new RuntimeException("id not found"));
+		Utility existingUtility =  utilityDAO.findById(id);
+		if(existingUtility == null)
+		{
+			throw new RuntimeException("id not found");
+		}
+		else
+		{
+			return existingUtility;
+		}
 	}
 	
-	public void deleteById(long id)
-	{
-		utilityDAO.deleteById(id);
-	}
-	
-	public void deleteAll()
-	{
-		utilityDAO.deleteAll();
-	}
+//	public void deleteById(long id)
+//	{
+//		utilityDAO.deleteById(id);
+//	}
+//	
+//	public void deleteAll()
+//	{
+//		utilityDAO.deleteAll();
+//	}
 
 
 }

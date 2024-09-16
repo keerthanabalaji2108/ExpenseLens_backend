@@ -2,35 +2,22 @@ package com.elens.demo.entity;
 
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.*;
 
 @Component
-@Entity
-@Table(name = "utility")
 public class Utility {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entertainment_seq_gen")
-    @SequenceGenerator(name = "entertainment_seq_gen", sequenceName = "entertainment_seq", allocationSize = 1)
-	@Column(name = "id")
+
 	long id;
 	
-	@Column
 	double electricity;
 	
-	@Column
 	double water;
 	
-	@Column
 	double rent;
 	
-	@Column
 	double gas;
 	
-	@Column
 	double mobile;
 	
-	@Column
 	double maintenance;
 	
 	public long getId() {

@@ -22,8 +22,11 @@ public class FoodService {
 	}
 
 	public Food updateFood(long id, Food food) {
-		Food existingFood = foodDAO.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Food record not found for id: " + id));
+		Food existingFood = foodDAO.findById(id);
+		if(existingFood == null)
+		{
+			throw new RuntimeException("id not found");
+		}
 
 		existingFood.setGroceries(existingFood.getGroceries() + food.getGroceries());
 		existingFood.setDiningOut(existingFood.getDiningOut() + food.getDiningOut());
@@ -35,21 +38,29 @@ public class FoodService {
 	}
 
 	public void save(Food food) {
-		foodDAO.save(food);
+		foodDAO.saveNew(food);
 	}
 	
 	public Food getFoodById(long id) {
-		return foodDAO.findById(id).orElseThrow(() -> new RuntimeException("id not found"));
+		Food existingFood = foodDAO.findById(id);
+		if(existingFood == null)
+		{
+			throw new RuntimeException("id not found");
+		}
+		else
+		{
+			return existingFood;
+		}
 	}
 	
-	public void deleteById(long id)
-	{
-		foodDAO.deleteById(id);
-	}
-	
-	public void deleteAll()
-	{
-		foodDAO.deleteAll();
-	}
+//	public void deleteById(long id)
+//	{
+//		foodDAO.deleteById(id);
+//	}
+//	
+//	public void deleteAll()
+//	{
+//		foodDAO.deleteAll();
+//	}
 
 }

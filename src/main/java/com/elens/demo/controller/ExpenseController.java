@@ -134,27 +134,27 @@ public class ExpenseController {
 
 	// Unsubscribed by user
 
-	@DeleteMapping("/removeUser/{id}")
-	public String removeUserById(@PathVariable long id) {
-		boolean msg = userService.removeUserById(id);
-		if (msg) {
-			entertainmentService.deleteById(id);
-			utilityService.deleteById(id);
-			foodService.deleteById(id);
-			return "Successfully removed";
-		}
-		return "Failed to remove";
-	}
-
-	// Deleting all users
-
-	@DeleteMapping("/removeAllUsers")
-	public String removeAllUsers() {
-		entertainmentService.deleteAll();
-		utilityService.deleteAll();
-		foodService.deleteAll();
-		userService.removeAllUsers();
-		return "Deleted all entries";
-	}
+//	@DeleteMapping("/removeUser/{id}")
+//	public String removeUserById(@PathVariable long id) {
+//		boolean msg = userService.removeUserById(id);
+//		if (msg) {
+//			entertainmentService.deleteById(id);
+//			utilityService.deleteById(id);
+//			foodService.deleteById(id);
+//			return "Successfully removed";
+//		}
+//		return "Failed to remove";
+//	}
+//
+//	// Deleting all users
+//
+//	@DeleteMapping("/removeAllUsers")
+//	public String removeAllUsers() {
+//		entertainmentService.deleteAll();
+//		utilityService.deleteAll();
+//		foodService.deleteAll();
+//		userService.removeAllUsers();
+//		return "Deleted all entries";
+//	}
 
 }

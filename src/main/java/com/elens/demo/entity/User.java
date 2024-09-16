@@ -3,43 +3,28 @@ package com.elens.demo.entity;
 
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.*;
 
 @Component
-@Entity
-@Table(name = "expenselens_user")
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
-    @SequenceGenerator(name = "user_seq_gen", sequenceName = "user_seq", allocationSize = 1)
-	@Column(name = "id")
+	
 	long id;
 
-	@Column (unique = true)
 	String username;
 	
-	@Column
 	String name;
 	
-	@Column
 	String password;
 
-	@Column
 	double salary;
 
-	@Column
 	double totalSpending;
 
-	@Column
 	double totalSaving;
 
-	@Column
 	double utility;
 
-	@Column
 	double entertainment;
 
-	@Column
 	double food;
 	
 	
