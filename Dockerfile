@@ -7,4 +7,4 @@ COPY ./target/course-service.jar /app1
 # Expose the port the Spring Boot application will run on
 EXPOSE 8001
 # Command to run the application
-CMD ["java", "-jar", "course-service.jar"]
+CMD ["java", "-jar", "ExpenseLens-0.0.1-SNAPSHOT.jar"]
