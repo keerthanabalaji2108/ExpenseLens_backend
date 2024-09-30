@@ -35,7 +35,7 @@ public class UserService {
 	}
 
 	public User getUserByUsernameAndPassword(String username, String pwd) {
-		return userDAO.findByusernameAndPassword(username, pwd);
+		return userDAO.findByUsernameAndPassword(username, pwd);
 	}
 
 //	public boolean removeUserById(long id) {
