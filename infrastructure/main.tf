@@ -26,15 +26,6 @@ resource "aws_s3_bucket" "expense_lens_bucket_backend" {
 
 }
 
-resource "aws_s3_bucket_public_access_block" "bucket-public-access" {
-    bucket = aws_s3_bucket.expense_lens_bucket_backend.id
-
-    block_public_acls = false
-    block_public_policy = false
-    ignore_public_acls = false
-    restrict_public_buckets = false
-}
-
 resource "aws_s3_bucket_website_configuration" "spring-config" {
   bucket = aws_s3_bucket.expense_lens_bucket_backend.id
 
@@ -42,31 +33,6 @@ resource "aws_s3_bucket_website_configuration" "spring-config" {
     suffix = "index.html"
   }
 }
-
-resource "aws_s3_object" "index-html" {
-  bucket = aws_s3_bucket.expense_lens_bucket_backend.bucket
-  key    = "index.html"  # This is the key for the object in S3
-  source = "../index.html"  # Path to the index.html file on your local system
-  acl    = "public-read"  # Make it publicly readable (important for a website)
-
-  # Optional: Set the content-type
-  content_type = "text/html"
-}
-
-
-# Upload the Spring Boot JAR file to the S3 bucket
-resource "aws_s3_object" "jar_file" {
-  bucket = aws_s3_bucket.expense_lens_bucket_backend.id  # Use id to refer to the bucket name
-  key    = "ExpenseLens-0.0.1-SNAPSHOT.jar"  # Object key in S3
-  source = "../target/ExpenseLens-0.0.1-SNAPSHOT.jar"  # Path to the JAR file locally
-  etag   = filemd5("../target/ExpenseLens-0.0.1-SNAPSHOT.jar")  # Avoids re-upload if unchanged
-
-  tags = {
-    Name = "ExpenseLensJAR"
-    Environment = "Dev"
-  }
-}
-
 
 resource "aws_s3_bucket_ownership_controls" "bucket-ownership" {
   bucket = aws_s3_bucket.expense_lens_bucket_backend.id
@@ -77,6 +43,14 @@ resource "aws_s3_bucket_ownership_controls" "bucket-ownership" {
 
 }
 
+resource "aws_s3_bucket_public_access_block" "bucket-public-access" {
+    bucket = aws_s3_bucket.expense_lens_bucket_backend.id
+
+    block_public_acls = false
+    block_public_policy = false
+    ignore_public_acls = false
+    restrict_public_buckets = false
+}
 
 resource "aws_s3_bucket_acl" "bucket-acl" {
   bucket = aws_s3_bucket.expense_lens_bucket_backend.id
@@ -103,6 +77,31 @@ resource "aws_s3_bucket_policy" "name" {
   })
 }
 
+
+# Upload the Spring Boot JAR file to the S3 bucket
+resource "aws_s3_object" "jar_file" {
+  bucket = aws_s3_bucket.expense_lens_bucket_backend.id  # Use id to refer to the bucket name
+  key    = "ExpenseLens-0.0.1-SNAPSHOT.jar"  # Object key in S3
+  source = "../target/ExpenseLens-0.0.1-SNAPSHOT.jar"  # Path to the JAR file locally
+  etag   = filemd5("../target/ExpenseLens-0.0.1-SNAPSHOT.jar")  # Avoids re-upload if unchanged
+
+  tags = {
+    Name = "ExpenseLensJAR"
+    Environment = "Dev"
+  }
+}
+
+resource "aws_s3_object" "index-html" {
+  bucket = aws_s3_bucket.expense_lens_bucket_backend.bucket
+  key    = "index.html"  # This is the key for the object in S3
+  source = "../index.html"  # Path to the index.html file on your local system
+  acl    = "public-read"  # Make it publicly readable (important for a website)
+
+  # Optional: Set the content-type
+  content_type = "text/html"
+}
+
+
 # Create a security group for the EC2 instance
 resource "aws_security_group" "springboot_sg" {
   name        = "expense-lens-sg"
@@ -116,7 +115,7 @@ resource "aws_security_group" "springboot_sg" {
   }
 
   ingress {
-    from_port   = 8080  # Spring Boot runs on port 9090
+    from_port   = 8080  # Spring Boot runs on port 8080
     to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]  # Allow HTTP access to the Spring Boot app from anywhere
