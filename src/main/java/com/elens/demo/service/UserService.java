@@ -8,6 +8,7 @@ import com.elens.demo.entity.Entertainment;
 import com.elens.demo.entity.Food;
 import com.elens.demo.entity.User;
 import com.elens.demo.entity.Utility;
+import com.elens.demo.exception.CustomException;
 import com.elens.demo.repository.UserDAO;
 import java.util.*;
 
@@ -27,7 +28,7 @@ public class UserService {
 	}
 
 	public User addNewUser(User user) {
-		User userSaved = userDAO.saveNew(user);
+		User userSaved = userDAO.save(user);
 		userSaved.setTotalSaving(user.getSalary());
 		userDAO.save(userSaved);
 		return userSaved;
@@ -52,7 +53,7 @@ public class UserService {
 //	}
 
 	public void updateEntertainment(long id, Entertainment entertainment) {
-		User userSaved = userDAO.findById(id);
+		User userSaved = userDAO.findById(id).orElseThrow(() -> new RuntimeException("id not found"));
 		if(userSaved == null)
 		{
 			throw new RuntimeException("id not found");
@@ -71,7 +72,9 @@ public class UserService {
 	}
 
 	public void updateFood(long id, Food food) {
-		User userSaved = userDAO.findById(id);
+		 User userSaved = userDAO.findById(id)
+		            .orElseThrow(() -> new CustomException("User with id " + id + " not found"));
+
 		if(userSaved == null)
 		{
 			throw new RuntimeException("id not found");
@@ -87,7 +90,7 @@ public class UserService {
 	}
 
 	public void updateUtility(long id, Utility utility) {
-		User userSaved = userDAO.findById(id);
+		User userSaved = userDAO.findById(id).orElseThrow(() -> new RuntimeException("not an id"));
 		if(userSaved == null)
 		{
 			throw new RuntimeException("id not found");
@@ -107,7 +110,7 @@ public class UserService {
 	}
 
 	public List<Double> getAsPercentage(long id) {
-		User userSaved = userDAO.findById(id);
+		User userSaved = userDAO.findById(id).orElseThrow(() -> new RuntimeException("not an id"));
 		if(userSaved == null)
 		{
 			throw new RuntimeException("id not found");
@@ -124,7 +127,7 @@ public class UserService {
 	}
 
 	public List<Double> getSpendingVsSaving(@PathVariable long id) {
-		User userSaved = userDAO.findById(id);
+		User userSaved = userDAO.findById(id).orElseThrow(() -> new RuntimeException("not an id"));
 		if(userSaved == null)
 		{
 			throw new RuntimeException("id not found");

@@ -3,28 +3,47 @@ package com.elens.demo.entity;
 
 import org.springframework.stereotype.Component;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-@Component
+
+@Entity
+@Table(name = "user")
 public class User {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	long id;
 
+	@Column
 	String username;
 	
+	@Column
 	String name;
 	
+	@Column
 	String password;
 
+	@Column
 	double salary;
 
+	@Column
 	double totalSpending;
 
+	@Column
 	double totalSaving;
 
+	@Column
 	double utility;
 
+	@Column
 	double entertainment;
 
+	@Column
 	double food;
 	
 	
